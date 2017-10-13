@@ -1,6 +1,6 @@
 package top.shellteo.pojo;
 
-public class MCity {
+public class UCity {
     private Integer id;
 
     private String city;

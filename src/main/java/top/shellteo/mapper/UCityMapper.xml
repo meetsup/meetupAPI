@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="top.shellteo.mapper.MCityMapper" >
-  <resultMap id="BaseResultMap" type="top.shellteo.pojo.MCity" >
+<mapper namespace="top.shellteo.mapper.UCityMapper" >
+  <resultMap id="BaseResultMap" type="top.shellteo.pojo.UCity" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="city" property="city" jdbcType="VARCHAR" />
   </resultMap>
@@ -66,13 +66,13 @@
   <sql id="Base_Column_List" >
     id, city
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="top.shellteo.pojo.MCityExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="top.shellteo.pojo.UCityExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from m_city
+    from u_city
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -83,25 +83,25 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from m_city
+    from u_city
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from m_city
+    delete from u_city
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="top.shellteo.pojo.MCityExample" >
-    delete from m_city
+  <delete id="deleteByExample" parameterType="top.shellteo.pojo.UCityExample" >
+    delete from u_city
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="top.shellteo.pojo.MCity" >
-    insert into m_city (id, city)
+  <insert id="insert" parameterType="top.shellteo.pojo.UCity" >
+    insert into u_city (id, city)
     values (#{id,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="top.shellteo.pojo.MCity" >
-    insert into m_city
+  <insert id="insertSelective" parameterType="top.shellteo.pojo.UCity" >
+    insert into u_city
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -119,14 +119,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="top.shellteo.pojo.MCityExample" resultType="java.lang.Integer" >
-    select count(*) from m_city
+  <select id="countByExample" parameterType="top.shellteo.pojo.UCityExample" resultType="java.lang.Integer" >
+    select count(*) from u_city
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update m_city
+    update u_city
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -140,15 +140,15 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update m_city
+    update u_city
     set id = #{record.id,jdbcType=INTEGER},
       city = #{record.city,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="top.shellteo.pojo.MCity" >
-    update m_city
+  <update id="updateByPrimaryKeySelective" parameterType="top.shellteo.pojo.UCity" >
+    update u_city
     <set >
       <if test="city != null" >
         city = #{city,jdbcType=VARCHAR},
@@ -156,8 +156,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="top.shellteo.pojo.MCity" >
-    update m_city
+  <update id="updateByPrimaryKey" parameterType="top.shellteo.pojo.UCity" >
+    update u_city
     set city = #{city,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

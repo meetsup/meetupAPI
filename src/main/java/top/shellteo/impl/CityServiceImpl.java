@@ -4,8 +4,8 @@ import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.shellteo.mapper.MCityMapper;
-import top.shellteo.pojo.MCity;
+import top.shellteo.mapper.UCityMapper;
+import top.shellteo.pojo.UCity;
 import top.shellteo.service.CityService;
 
 import java.util.List;
@@ -17,13 +17,13 @@ import java.util.List;
 public class CityServiceImpl implements CityService {
     private static final Logger logger = Logger.getLogger(CityServiceImpl.class);
     @Autowired
-    private MCityMapper mCityMapper;
+    private UCityMapper uCityMapper;
 
     public String findAllCity() {
         String res = "";
         try{
-            List<MCity> mCityList = mCityMapper.selectByExample(null);
-            res = JSONArray.fromObject(mCityList).toString();
+            List<UCity> uCityList = uCityMapper.selectByExample(null);
+            res = JSONArray.fromObject(uCityList).toString();
         }catch (Exception e){
             logger.error(e.getMessage());
         }

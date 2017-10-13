@@ -309,6 +309,34 @@
       <artifactId>commons-lang3</artifactId>
       <version>${commons-lang3.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+      <version>4.4.5</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
+    <!--  加解密 -->
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>1.54</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-io -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.3.2</version>
+    </dependency>
+
+
   </dependencies>
   <build>
     <finalName>laiba</finalName>
@@ -322,8 +350,11 @@
           <warName>laiba</warName>
           <webResources>
             <resource>
-              <directory>src/main/resources/config</directory>
-              <targetPath>WEB-INF/classes/resources/config</targetPath>
+              <directory>src/main/resources</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+              <targetPath>WEB-INF/classes</targetPath>
               <filtering>true</filtering>
             </resource>
             <resource>

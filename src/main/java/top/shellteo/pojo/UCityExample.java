@@ -3,14 +3,14 @@ package top.shellteo.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MCityExample {
+public class UCityExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public MCityExample() {
+    public UCityExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
