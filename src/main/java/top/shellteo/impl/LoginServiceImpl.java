@@ -2,6 +2,7 @@ package top.shellteo.impl;
 
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.net.util.Base64;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,12 +10,14 @@ import top.shellteo.entity.Response;
 import top.shellteo.mapper.UUserMapper;
 import top.shellteo.pojo.UUser;
 import top.shellteo.service.LoginService;
+import top.shellteo.util.AESUtil;
 import top.shellteo.util.ConstantShow;
 import top.shellteo.util.HttpUtils;
 import top.shellteo.util.UUIDUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 
 /**
@@ -42,7 +45,7 @@ public class LoginServiceImpl implements LoginService {
                 String errorCode = String.valueOf(jsonObject.get("errcode"));
                 String errorMsg = String.valueOf(jsonObject.get("errmsg"));
                 logger.error("==>登陆失败,错误码:"+errorCode+" 错误信息:"+errorMsg);
-                return JSONObject.fromObject(new Response("0",errorCode,errorMsg,"")).toString();
+                return JSONObject.fromObject(new Response("1",errorCode,errorMsg,"")).toString();
             }
 
             uuid = UUIDUtil.getUUID();
@@ -58,14 +61,73 @@ public class LoginServiceImpl implements LoginService {
                 uUser = new UUser();
                 uUser.setOpenid(openId);
                 uUser.setUnionid(unionid);
-                uUserMapper.insert(uUser);
+                uUser.setCreatetime(new Date());
+                if (uUser!=null){
+                    uUserMapper.insert(uUser);
+                }
             }
             String jsonData = "{\"loginId\":"+uuid+"}";
-            return JSONObject.fromObject(new Response("1","","",jsonData)).toString();
+            return JSONObject.fromObject(new Response("0","","",jsonData)).toString();
         }catch (Exception e){
             e.printStackTrace();
             logger.error("==>登陆失败 错误信息:"+e);
-            return JSONObject.fromObject(new Response("0","",e.getMessage(),"")).toString();
+            return JSONObject.fromObject(new Response("1","",e.getMessage(),"")).toString();
         }
+    }
+
+    @Override
+    public String saveUser(String savaJson, HttpServletRequest request) {//String signature, String rawData, String encryptedData, String iv
+        //不验证是否已经登陆
+        logger.info("==>开始保存用户私密信息");
+        //1.获取json数据
+        JSONObject object = JSONObject.fromObject(savaJson);
+        String signature = String.valueOf(object.get("signature"));
+        String rawData = String.valueOf(object.get("rawData"));
+        String encryptedData = String.valueOf(object.get("encryptedData"));
+        String iv = String.valueOf(object.get("iv"));
+        String uuid = String.valueOf(object.get("uuid"));
+        if (StringUtils.isBlank(signature) || StringUtils.isBlank(rawData) || StringUtils.isBlank(encryptedData) || StringUtils.isBlank(iv) || StringUtils.isBlank(uuid)){
+            logger.error("==>保存用户私密信息失败:入参数据有异常,请检查");
+            return String.valueOf(JSONObject.fromObject(new Response("1","","入参数据有空值,请检查","")));
+        }
+
+        //2.校验用户数据完整性
+        try{
+            String openidAndSessionkey = (String) request.getSession().getAttribute(uuid);
+            String sessionKey = openidAndSessionkey.split("-")[0];
+            String signature2 = AESUtil.getSha1(rawData+sessionKey);
+            if (signature != signature2){
+                logger.error("==>保存用户私密信息失败:签名密钥验证失败");
+                return String.valueOf(JSONObject.fromObject(new Response("1","","签名密钥验证失败","")));
+            }
+
+            //3.用户数据解密
+            String encryptedDataDecode = "";
+            byte[] bytes = AESUtil.instance.decrypt(Base64.decodeBase64(encryptedData),Base64.decodeBase64(sessionKey),Base64.decodeBase64(iv));
+            if (bytes!=null && bytes.length>0){
+                encryptedDataDecode = new String(bytes,"UTF-8");
+            }
+
+            //4.用户信息存库
+            if (StringUtils.isNotBlank(encryptedDataDecode)){
+                JSONObject encryptedObject = JSONObject.fromObject(encryptedDataDecode);
+                encryptedObject.remove("watermark");//此数据不存储
+                UUser uUser = (UUser) JSONObject.toBean(encryptedObject,UUser.class);
+                UUser uUser1 = uUserMapper.selectByPrimaryKey(uUser.getOpenid());
+                if (uUser1 != null){
+                    //更新
+                    uUser.setUpdatetime(new Date());
+                    uUserMapper.updateByPrimaryKey(uUser);
+                }else {
+                    //插入
+                    uUser.setCreatetime(new Date());
+                    uUserMapper.insertSelective(uUser);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("==>保存用户私密信息失败:"+e);
+        }
+        return JSONObject.fromObject(new Response("0","","","")).toString();
     }
 }

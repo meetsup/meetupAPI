@@ -15,14 +15,21 @@ import javax.servlet.http.HttpServletRequest;
  * Created by HP on 2017/10/12.
  */
 @Controller
+@RequestMapping(value = "/login",method = RequestMethod.POST)
 public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    @RequestMapping(value = "/user")
     @ResponseBody
     public String login(@RequestBody String json, HttpServletRequest request){
         String res = loginService.login(String.valueOf(JSONObject.fromObject(json).get("js_code")),request);
+        return res;
+    }
+
+    @RequestMapping(value = "/saveMessage")
+    public String saveUser(@RequestBody String saveJson, HttpServletRequest request){
+        String res = loginService.saveUser(saveJson, request);
         return res;
     }
 }

@@ -18,7 +18,7 @@ public class AESUtil {
     public static final AESUtil instance = new AESUtil();
     public static boolean initialized = false;
     //sha1加密
-    public static String getSha1(String str){
+    public static String getSha1(String str) throws Exception{
         if(str==null||str.length()==0){
             return null;
         }
@@ -38,8 +38,7 @@ public class AESUtil {
             }
             return new String(buf);
         } catch (Exception e) {
-            // TODO: handle exception
-            return null;
+            throw e;
         }
     }
 
@@ -52,7 +51,7 @@ public class AESUtil {
      * @return
      * @throws InvalidAlgorithmParameterException
      */
-    public byte[] decrypt(byte[] content, byte[] keyByte, byte[] ivByte) throws InvalidAlgorithmParameterException {
+    public byte[] decrypt(byte[] content, byte[] keyByte, byte[] ivByte) throws Exception {
         initialize();
         try {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
@@ -62,22 +61,26 @@ public class AESUtil {
             return result;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            throw e;
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
+            throw e;
         } catch (InvalidKeyException e) {
             e.printStackTrace();
+            throw e;
         } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
+            throw e;
         } catch (BadPaddingException e) {
             e.printStackTrace();
+            throw e;
         } catch (NoSuchProviderException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            throw e;
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            throw e;
         }
-        return null;
     }
 
     public static void initialize(){
@@ -90,5 +93,18 @@ public class AESUtil {
         AlgorithmParameters params = AlgorithmParameters.getInstance("AES");
         params.init(new IvParameterSpec(iv));
         return params;
+    }
+
+    public static void main(String[] args) {
+        try{
+            String res = AESUtil.getSha1("{\"nickName\":\"Band\",\"gender\":1,\"language\":\"zh_CN\",\"city\":\"Guangzhou\",\"province\":\"Guangdong\",\"country\":\"CN\",\"avatarUrl\":\"http://wx.qlogo.cn/mmopen/vi_32/1vZvI39NWFQ9XM4LtQpFrQJ1xlgZxx3w7bQxKARol6503Iuswjjn6nIGBiaycAjAtpujxyzYsrztuuICqIM5ibXQ/0\"}HyVFkGl5F5OQWJZZaNzBBg==");
+            if ("75e81ceda165f4ffa64f4068af58c64b8f54b88c".equals(res)){
+                System.out.println("ok");
+            }
+            System.out.println(res);
+        }catch (Exception e){
+
+        }
+
     }
 }

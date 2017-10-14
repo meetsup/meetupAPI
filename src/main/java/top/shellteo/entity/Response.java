@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by HP on 2017/10/13.
  */
 public class Response implements Serializable {
-    private String status;//    0/失败  1/成功
+    private String status;//    0/成功  1/失败
     private String errorCode;//     错误代码
     private String errMsg;//       错误信息
     private String jsonData;
