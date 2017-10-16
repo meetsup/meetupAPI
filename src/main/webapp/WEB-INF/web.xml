@@ -76,9 +76,9 @@
   </servlet-mapping>
 
   <!-- 这里配置的是整个web的超时时间 -->
-  <session-config>
+<!--  <session-config>
     <session-timeout>30</session-timeout>
-  </session-config>
+  </session-config>-->
 
   <!--解决https无法访问的问题-->
 <!--  <login-config>

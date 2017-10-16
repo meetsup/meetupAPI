@@ -6,6 +6,7 @@ import org.apache.commons.net.util.Base64;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.shellteo.entity.Response;
 import top.shellteo.mapper.UUserMapper;
 import top.shellteo.pojo.UUser;
@@ -29,10 +30,11 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private UUserMapper uUserMapper;
     @Override
+    @Transactional
     public String login(String js_code, HttpServletRequest request) {
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+ ConstantShow.appid+"&secret="+ConstantShow.secret+"&js_code="+js_code+"&grant_type="+ConstantShow.grant_type;
         logger.info("开始登录:"+url);
-        String uuid = "";//返回的登录态
+        //String uuid = "";//返回的登录态
         try{
             //1.调用接口获取openid
             String resHttp = HttpUtils.get(url,"UTF-8");
@@ -48,10 +50,10 @@ public class LoginServiceImpl implements LoginService {
                 return JSONObject.fromObject(new Response("1",errorCode,errorMsg,"")).toString();
             }
 
-            uuid = UUIDUtil.getUUID();
+            /*uuid = UUIDUtil.getUUID();
             HttpSession session = request.getSession();
             session.setMaxInactiveInterval(1200);//单位:秒 这里设置的是本次请求的超时时间
-            session.setAttribute(uuid,session_key+"-"+openId);//登录凭证
+            session.setAttribute(uuid,session_key+"-"+openId);//登录凭证*/
 
             //3.openid存库,用户可能已经登陆过,先查询有无该用户
             //注意:前端发出登录请求时,session中可能还存有该用户登录数据,此时,不需要理会,再生成一个session即可,原先的session由于session设置的时效性会自动失效
@@ -62,11 +64,15 @@ public class LoginServiceImpl implements LoginService {
                 uUser.setOpenid(openId);
                 uUser.setUnionid(unionid);
                 uUser.setCreatetime(new Date());
-                if (uUser!=null){
-                    uUserMapper.insert(uUser);
-                }
+                uUser.setSessionKey(session_key);
+                uUserMapper.insert(uUser);
+            }else {
+                uUser = new UUser();
+                uUser.setSessionKey(session_key);
+                uUser.setOpenid(openId);
+                uUserMapper.updateByPrimaryKeySelective(uUser);
             }
-            String jsonData = "{\"loginId\":"+uuid+"}";
+            String jsonData = "{\"openId\":"+openId+"}";
             return JSONObject.fromObject(new Response("0","","",jsonData)).toString();
         }catch (Exception e){
             e.printStackTrace();
@@ -77,7 +83,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public String saveUser(String savaJson, HttpServletRequest request) {//String signature, String rawData, String encryptedData, String iv
-        //不验证是否已经登陆
+        //不验证是否已经登陆,前端登录之后若成功直接调用
         logger.info("==>开始保存用户私密信息");
         //1.获取json数据
         JSONObject object = JSONObject.fromObject(savaJson);
@@ -85,17 +91,18 @@ public class LoginServiceImpl implements LoginService {
         String rawData = String.valueOf(object.get("rawData"));
         String encryptedData = String.valueOf(object.get("encryptedData"));
         String iv = String.valueOf(object.get("iv"));
-        String uuid = String.valueOf(object.get("uuid"));
-        if (StringUtils.isBlank(signature) || StringUtils.isBlank(rawData) || StringUtils.isBlank(encryptedData) || StringUtils.isBlank(iv) || StringUtils.isBlank(uuid)){
+        String openId = String.valueOf(object.get("openId"));
+        String session_key = uUserMapper.selectByPrimaryKey(openId).getSessionKey();
+        if (StringUtils.isBlank(signature) || StringUtils.isBlank(rawData) || StringUtils.isBlank(encryptedData) || StringUtils.isBlank(iv) || StringUtils.isBlank(openId)){
             logger.error("==>保存用户私密信息失败:入参数据有异常,请检查");
             return String.valueOf(JSONObject.fromObject(new Response("1","","入参数据有空值,请检查","")));
         }
 
         //2.校验用户数据完整性
         try{
-            String openidAndSessionkey = (String) request.getSession().getAttribute(uuid);
-            String sessionKey = openidAndSessionkey.split("-")[0];
-            String signature2 = AESUtil.getSha1(rawData+sessionKey);
+            /*String openidAndSessionkey = (String) request.getSession().getAttribute(uuid);
+            String sessionKey = openidAndSessionkey.split("-")[0];*/
+            String signature2 = AESUtil.getSha1(rawData+session_key);
             if (signature != signature2){
                 logger.error("==>保存用户私密信息失败:签名密钥验证失败");
                 return String.valueOf(JSONObject.fromObject(new Response("1","","签名密钥验证失败","")));
@@ -103,7 +110,7 @@ public class LoginServiceImpl implements LoginService {
 
             //3.用户数据解密
             String encryptedDataDecode = "";
-            byte[] bytes = AESUtil.instance.decrypt(Base64.decodeBase64(encryptedData),Base64.decodeBase64(sessionKey),Base64.decodeBase64(iv));
+            byte[] bytes = AESUtil.instance.decrypt(Base64.decodeBase64(encryptedData),Base64.decodeBase64(session_key),Base64.decodeBase64(iv));
             if (bytes!=null && bytes.length>0){
                 encryptedDataDecode = new String(bytes,"UTF-8");
             }
