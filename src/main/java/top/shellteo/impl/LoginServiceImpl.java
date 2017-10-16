@@ -33,7 +33,7 @@ public class LoginServiceImpl implements LoginService {
     @Transactional
     public String login(String js_code, HttpServletRequest request) {
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+ ConstantShow.appid+"&secret="+ConstantShow.secret+"&js_code="+js_code+"&grant_type="+ConstantShow.grant_type;
-        logger.info("开始登录:"+url);
+        logger.info("==>开始登录:"+url);
         //String uuid = "";//返回的登录态
         try{
             //1.调用接口获取openid
@@ -82,6 +82,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
+    @Transactional
     public String saveUser(String savaJson, HttpServletRequest request) {//String signature, String rawData, String encryptedData, String iv
         //不验证是否已经登陆,前端登录之后若成功直接调用
         logger.info("==>开始保存用户私密信息");
