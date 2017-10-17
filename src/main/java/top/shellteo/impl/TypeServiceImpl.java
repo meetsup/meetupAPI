@@ -35,7 +35,7 @@ public class TypeServiceImpl implements TypeService {
         }
         //2.查询所有数据返回
         List<UType> uTypes = uTypeMapper.selectByExample(null);
-        String jsonData = JSONArray.fromObject(uTypes).toString();
+        JSONArray jsonData = JSONArray.fromObject(uTypes);
         logger.info("==>类型查询结束");
         return JSONObject.fromObject(new Response("0","","",jsonData)).toString();
     }

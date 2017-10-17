@@ -1,12 +1,20 @@
 package top.shellteo.service;
 
-import top.shellteo.entity.ActivityPage;
-
-import java.util.List;
-
 /**
  * Created by HP on 2017/10/16.
  */
 public interface HomePageService {
-    String getAllActivityLimit(String jsonData);
+    /**
+     * 活动列表/搜索
+     * @param jsonData
+     * @return
+     */
+    String getAllActivityLimit(String jsonData, String type);
+
+    /**
+     * 活动详情
+     * @param jsonData
+     * @return
+     */
+    String getDetail(String jsonData);
 }

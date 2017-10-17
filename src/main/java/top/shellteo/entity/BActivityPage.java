@@ -1,9 +1,13 @@
-package top.shellteo.pojo;
+package top.shellteo.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BActivity {
-    private Long activityid;
+/**
+ * Created by HP on 2017/10/16.
+ */
+public class BActivityPage implements Serializable {
+    private String activityid;
 
     private String activityname;
 
@@ -11,17 +15,17 @@ public class BActivity {
 
     private String uploadpictures;
 
-    private Date starttime;
+    private String starttime;
 
-    private Date endtime;
+    private String endtime;
 
     private String phone;
 
     private String creator;
 
-    private Long fabulous;
+    private String fabulous;
 
-    private Long browsecount;
+    private String browsecount;
 
     private String isfree;
 
@@ -31,17 +35,13 @@ public class BActivity {
 
     private String type;
 
-    private Date createtime;
-
-    private Date updatetime;
-
     private String detail;
 
-    public Long getActivityid() {
+    public String getActivityid() {
         return activityid;
     }
 
-    public void setActivityid(Long activityid) {
+    public void setActivityid(String activityid) {
         this.activityid = activityid;
     }
 
@@ -69,19 +69,19 @@ public class BActivity {
         this.uploadpictures = uploadpictures == null ? null : uploadpictures.trim();
     }
 
-    public Date getStarttime() {
+    public String getStarttime() {
         return starttime;
     }
 
-    public void setStarttime(Date starttime) {
+    public void setStarttime(String starttime) {
         this.starttime = starttime;
     }
 
-    public Date getEndtime() {
+    public String getEndtime() {
         return endtime;
     }
 
-    public void setEndtime(Date endtime) {
+    public void setEndtime(String endtime) {
         this.endtime = endtime;
     }
 
@@ -101,19 +101,19 @@ public class BActivity {
         this.creator = creator == null ? null : creator.trim();
     }
 
-    public Long getFabulous() {
+    public String getFabulous() {
         return fabulous;
     }
 
-    public void setFabulous(Long fabulous) {
+    public void setFabulous(String fabulous) {
         this.fabulous = fabulous;
     }
 
-    public Long getBrowsecount() {
+    public String getBrowsecount() {
         return browsecount;
     }
 
-    public void setBrowsecount(Long browsecount) {
+    public void setBrowsecount(String browsecount) {
         this.browsecount = browsecount;
     }
 
@@ -147,22 +147,6 @@ public class BActivity {
 
     public void setType(String type) {
         this.type = type == null ? null : type.trim();
-    }
-
-    public Date getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
-    }
-
-    public Date getUpdatetime() {
-        return updatetime;
-    }
-
-    public void setUpdatetime(Date updatetime) {
-        this.updatetime = updatetime;
     }
 
     public String getDetail() {

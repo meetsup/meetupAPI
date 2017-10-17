@@ -73,7 +73,8 @@ public class LoginServiceImpl implements LoginService {
                 uUserMapper.updateByPrimaryKeySelective(uUser);
             }
             String jsonData = "{\"openId\":"+openId+"}";
-            return JSONObject.fromObject(new Response("0","","",jsonData)).toString();
+            JSONObject object = JSONObject.fromObject(jsonData);
+            return JSONObject.fromObject(new Response("0","","",object)).toString();
         }catch (Exception e){
             e.printStackTrace();
             logger.error("==>登陆失败 错误信息:"+e);

@@ -18,7 +18,7 @@ import top.shellteo.service.TypeService;
 public class TypeController {
     @Autowired
     private TypeService typeService;
-    @RequestMapping(value = "all")
+    @RequestMapping(value = "/all")
     @ResponseBody
     public String AllType(@RequestBody String jsonData){
         String res = typeService.AllType(String.valueOf(JSONObject.fromObject(jsonData).get("openId")));

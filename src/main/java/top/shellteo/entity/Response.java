@@ -9,9 +9,9 @@ public class Response implements Serializable {
     private String status;//    0/成功  1/失败
     private String errorCode;//     错误代码
     private String errMsg;//       错误信息
-    private String jsonData;
+    private Object jsonData;
 
-    public Response(String status, String errorCode, String errMsg, String jsonData) {
+    public Response(String status, String errorCode, String errMsg, Object jsonData) {
         this.status = status;
         this.errorCode = errorCode;
         this.errMsg = errMsg;
@@ -42,11 +42,11 @@ public class Response implements Serializable {
         this.errMsg = errMsg;
     }
 
-    public String getJsonData() {
+    public Object getJsonData() {
         return jsonData;
     }
 
-    public void setJsonData(String jsonData) {
+    public void setJsonData(Object jsonData) {
         this.jsonData = jsonData;
     }
 }

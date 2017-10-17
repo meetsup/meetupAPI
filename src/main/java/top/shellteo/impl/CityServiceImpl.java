@@ -1,9 +1,11 @@
 package top.shellteo.impl;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import top.shellteo.entity.Response;
 import top.shellteo.mapper.UCityMapper;
 import top.shellteo.pojo.UCity;
 import top.shellteo.service.CityService;
@@ -20,13 +22,14 @@ public class CityServiceImpl implements CityService {
     private UCityMapper uCityMapper;
 
     public String findAllCity() {
-        String res = "";
+        JSONArray res = null;
         try{
             List<UCity> uCityList = uCityMapper.selectByExample(null);
-            res = JSONArray.fromObject(uCityList).toString();
+            res = JSONArray.fromObject(uCityList);
         }catch (Exception e){
             logger.error(e.getMessage());
+            return JSONObject.fromObject(new Response("1","",e.getMessage(),"")).toString();
         }
-        return res;
+        return JSONObject.fromObject(new Response("0","","",res)).toString();
     }
 }

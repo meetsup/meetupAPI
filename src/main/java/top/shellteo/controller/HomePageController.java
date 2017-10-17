@@ -10,6 +10,7 @@ import top.shellteo.service.HomePageService;
 
 /**
  * Created by HP on 2017/10/16.
+ * 首页
  */
 @Controller
 @RequestMapping(value = "/homepage",method = RequestMethod.POST)
@@ -20,7 +21,24 @@ public class HomePageController {
     @RequestMapping(value = "/listActivity")
     @ResponseBody
     public String allActivity(@RequestBody String jsondata){
-        String res = homePageService.getAllActivityLimit(jsondata);
+        String type = "list";
+        String res = homePageService.getAllActivityLimit(jsondata,type);
         return res;
     }
+
+    @RequestMapping(value = "/detail")
+    @ResponseBody
+    public String detailActivity(@RequestBody String jsonData){
+        String res = homePageService.getDetail(jsonData);
+        return res;
+    }
+
+    @RequestMapping(value = "/search")
+    @ResponseBody
+    public String search(@RequestBody String jsondata){
+        String type = "search";
+        String res = homePageService.getAllActivityLimit(jsondata,type);
+        return res;
+    }
+
 }
