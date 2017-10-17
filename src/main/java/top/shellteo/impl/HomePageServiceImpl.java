@@ -2,7 +2,6 @@ package top.shellteo.impl;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +14,9 @@ import top.shellteo.mapper.UUserMapper;
 import top.shellteo.pojo.BActivity;
 import top.shellteo.service.HomePageService;
 import top.shellteo.util.BeanConvert;
-import top.shellteo.util.JsonDateConvert;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by HP on 2017/10/16.
