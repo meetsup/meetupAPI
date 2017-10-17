@@ -1,13 +1,12 @@
-package top.shellteo.pojo;
+package top.shellteo.entity;
 
-import java.util.Date;
-
-public class UUser {
+/**
+ * Created by HP on 2017/10/17.
+ */
+public class UUserPage {
     private String openid;
 
     private String unionid;
-
-    private String sessionKey;
 
     private String nickname;
 
@@ -21,16 +20,22 @@ public class UUser {
 
     private String country;
 
-    private Date createtime;
+    private String telphone;
 
-    private Date updatetime;
+    private String interest;
+
+    private String age;
+
+    private String high;
+
+    private String height;
 
     public String getOpenid() {
         return openid;
     }
 
     public void setOpenid(String openid) {
-        this.openid = openid == null ? null : openid.trim();
+        this.openid = openid;
     }
 
     public String getUnionid() {
@@ -38,15 +43,7 @@ public class UUser {
     }
 
     public void setUnionid(String unionid) {
-        this.unionid = unionid == null ? null : unionid.trim();
-    }
-
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
-    public void setSessionKey(String sessionKey) {
-        this.sessionKey = sessionKey == null ? null : sessionKey.trim();
+        this.unionid = unionid;
     }
 
     public String getNickname() {
@@ -54,7 +51,7 @@ public class UUser {
     }
 
     public void setNickname(String nickname) {
-        this.nickname = nickname == null ? null : nickname.trim();
+        this.nickname = nickname;
     }
 
     public String getGender() {
@@ -62,7 +59,7 @@ public class UUser {
     }
 
     public void setGender(String gender) {
-        this.gender = gender == null ? null : gender.trim();
+        this.gender = gender;
     }
 
     public String getAvatarurl() {
@@ -70,7 +67,7 @@ public class UUser {
     }
 
     public void setAvatarurl(String avatarurl) {
-        this.avatarurl = avatarurl == null ? null : avatarurl.trim();
+        this.avatarurl = avatarurl;
     }
 
     public String getCity() {
@@ -78,7 +75,7 @@ public class UUser {
     }
 
     public void setCity(String city) {
-        this.city = city == null ? null : city.trim();
+        this.city = city;
     }
 
     public String getProvince() {
@@ -86,7 +83,7 @@ public class UUser {
     }
 
     public void setProvince(String province) {
-        this.province = province == null ? null : province.trim();
+        this.province = province;
     }
 
     public String getCountry() {
@@ -94,22 +91,46 @@ public class UUser {
     }
 
     public void setCountry(String country) {
-        this.country = country == null ? null : country.trim();
+        this.country = country;
     }
 
-    public Date getCreatetime() {
-        return createtime;
+    public String getTelphone() {
+        return telphone;
     }
 
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
+    public void setTelphone(String telphone) {
+        this.telphone = telphone;
     }
 
-    public Date getUpdatetime() {
-        return updatetime;
+    public String getInterest() {
+        return interest;
     }
 
-    public void setUpdatetime(Date updatetime) {
-        this.updatetime = updatetime;
+    public void setInterest(String interest) {
+        this.interest = interest;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getHigh() {
+        return high;
+    }
+
+    public void setHigh(String high) {
+        this.high = high;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
     }
 }

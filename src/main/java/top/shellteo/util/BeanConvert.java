@@ -30,6 +30,7 @@ public class BeanConvert {
             Method get = obj.getClass().getMethod("get"+nameNew);//获取get方法
             if (type.equals("class java.lang.String")){
                 Method set = obj.getClass().getMethod("set"+nameNew,String.class);//获取set方法
+                //String s = (String) map.get(name);
                 if (map.get(name)!=null && map.get(name) instanceof String){
                     set.invoke(obj,(String)map.get(name));
                 }

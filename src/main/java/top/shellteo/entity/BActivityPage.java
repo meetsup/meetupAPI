@@ -21,7 +21,7 @@ public class BActivityPage implements Serializable {
 
     private String phone;
 
-    private String creator;
+    private String openid;
 
     private String fabulous;
 
@@ -93,12 +93,12 @@ public class BActivityPage implements Serializable {
         this.phone = phone == null ? null : phone.trim();
     }
 
-    public String getCreator() {
-        return creator;
+    public String getOpenid() {
+        return openid;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator == null ? null : creator.trim();
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 
     public String getFabulous() {
