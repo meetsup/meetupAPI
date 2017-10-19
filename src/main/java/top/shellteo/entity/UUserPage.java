@@ -22,6 +22,8 @@ public class UUserPage {
 
     private String telphone;
 
+    private String email;
+
     private String interest;
 
     private String age;
@@ -100,6 +102,14 @@ public class UUserPage {
 
     public void setTelphone(String telphone) {
         this.telphone = telphone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getInterest() {

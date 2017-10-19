@@ -70,10 +70,13 @@ public class LoginServiceImpl implements LoginService {
                 uUser = new UUser();
                 uUser.setSessionKey(session_key);
                 uUser.setOpenid(openId);
+                uUser.setCreatetime(new Date());
                 uUserMapper.updateByPrimaryKeySelective(uUser);
             }
-            String jsonData = "{\"openId\":"+openId+"}";
-            JSONObject object = JSONObject.fromObject(jsonData);
+            //String jsonData = "{\"openId\":"+openId+"}";
+            JSONObject object = new JSONObject();
+            object.accumulate("openId",openId);
+            //JSONObject object = JSONObject.fromObject(jsonData);
             return JSONObject.fromObject(new Response("0","","",object)).toString();
         }catch (Exception e){
             e.printStackTrace();
@@ -101,13 +104,15 @@ public class LoginServiceImpl implements LoginService {
         }
 
         //2.校验用户数据完整性
+        UUser uUser = null;
         try{
             /*String openidAndSessionkey = (String) request.getSession().getAttribute(uuid);
             String sessionKey = openidAndSessionkey.split("-")[0];*/
+            String te = rawData+session_key;
             String signature2 = AESUtil.getSha1(rawData+session_key);
             if (signature != signature2){
                 logger.error("==>保存用户私密信息失败:签名密钥验证失败");
-                return String.valueOf(JSONObject.fromObject(new Response("1","","签名密钥验证失败","")));
+                return JSONObject.fromObject(new Response("1","","签名密钥验证失败","")).toString();
             }
 
             //3.用户数据解密
@@ -121,12 +126,12 @@ public class LoginServiceImpl implements LoginService {
             if (StringUtils.isNotBlank(encryptedDataDecode)){
                 JSONObject encryptedObject = JSONObject.fromObject(encryptedDataDecode);
                 encryptedObject.remove("watermark");//此数据不存储
-                UUser uUser = (UUser) JSONObject.toBean(encryptedObject,UUser.class);
+                uUser = (UUser) JSONObject.toBean(encryptedObject,UUser.class);
                 UUser uUser1 = uUserMapper.selectByPrimaryKey(uUser.getOpenid());
                 if (uUser1 != null){
                     //更新
                     uUser.setUpdatetime(new Date());
-                    uUserMapper.updateByPrimaryKey(uUser);
+                    uUserMapper.updateByPrimaryKeySelective(uUser);
                 }else {
                     //插入
                     uUser.setCreatetime(new Date());
@@ -137,6 +142,6 @@ public class LoginServiceImpl implements LoginService {
             e.printStackTrace();
             logger.error("==>保存用户私密信息失败:"+e);
         }
-        return JSONObject.fromObject(new Response("0","","","")).toString();
+        return JSONObject.fromObject(new Response("0","","",JSONObject.fromObject(uUser))).toString();
     }
 }

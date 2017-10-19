@@ -1,5 +1,6 @@
 package top.shellteo.util;
 
+import org.bouncycastle.jcajce.provider.symmetric.AES;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.BadPaddingException;
@@ -97,9 +98,16 @@ public class AESUtil {
 
     public static void main(String[] args) {
         try{
-            String res = AESUtil.getSha1("{\"nickName\":\"Band\",\"gender\":1,\"language\":\"zh_CN\",\"city\":\"Guangzhou\",\"province\":\"Guangdong\",\"country\":\"CN\",\"avatarUrl\":\"http://wx.qlogo.cn/mmopen/vi_32/1vZvI39NWFQ9XM4LtQpFrQJ1xlgZxx3w7bQxKARol6503Iuswjjn6nIGBiaycAjAtpujxyzYsrztuuICqIM5ibXQ/0\"}HyVFkGl5F5OQWJZZaNzBBg==");
-            if ("75e81ceda165f4ffa64f4068af58c64b8f54b88c".equals(res)){
-                System.out.println("ok");
+            String s1 = "fb2c5dc606b5b1cfc07f72a0c2add6ff61c932ad";
+            String res = AESUtil.getSha1("{\"nickName\":\"tlhagh\",\"gender\":1,\"language\":\"zh_CN\",\"city\":\"\",\"province\":\"Shanghai\",\"country\":\"China\",\"avatarUrl\":\"https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLYoXpoN7jLzMibubEP0goWm2YUibia0DpKyPFCM9gBiciacPr5ibwC0WicKEM0BIsnFBWuyyvlGY0gHG88g/0\"}7/Aa7rQ9fkTmaPhWC8Eocw==");
+            if (res.equals(s1)){
+                System.out.println("OK");
+            }
+
+
+            String res2 = AESUtil.getSha1("{\"nickName\":\"Band\",\"gender\":1,\"language\":\"zh_CN\",\"city\":\"Guangzhou\",\"province\":\"Guangdong\",\"country\":\"CN\",\"avatarUrl\":\"http://wx.qlogo.cn/mmopen/vi_32/1vZvI39NWFQ9XM4LtQpFrQJ1xlgZxx3w7bQxKARol6503Iuswjjn6nIGBiaycAjAtpujxyzYsrztuuICqIM5ibXQ/0\"}HyVFkGl5F5OQWJZZaNzBBg==");
+            if (res2.equals("75e81ceda165f4ffa64f4068af58c64b8f54b88c")){
+                System.out.println("OK");
             }
             System.out.println(res);
         }catch (Exception e){

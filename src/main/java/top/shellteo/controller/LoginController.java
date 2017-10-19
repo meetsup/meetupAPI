@@ -29,8 +29,11 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/saveMessage")
+    @ResponseBody
     public String saveUser(@RequestBody String saveJson, HttpServletRequest request){
         String res = loginService.saveUser(saveJson, request);
         return res;
     }
+
+
 }
