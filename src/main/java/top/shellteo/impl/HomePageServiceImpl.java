@@ -4,16 +4,15 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.shellteo.entity.BActivityPage;
 import top.shellteo.entity.Response;
-import top.shellteo.mapper.BActivityMapper;
-import top.shellteo.mapper.UUserMapper;
-import top.shellteo.pojo.BActivity;
+import top.shellteo.pojo.*;
 import top.shellteo.service.HomePageService;
+import top.shellteo.util.BatisMapper;
 import top.shellteo.util.BeanConvert;
+import top.shellteo.util.ConstantShow;
 
 import java.util.Date;
 import java.util.List;
@@ -22,15 +21,11 @@ import java.util.List;
  * Created by HP on 2017/10/16.
  */
 @Service("HomePageService")
-public class HomePageServiceImpl implements HomePageService {
-    @Autowired
-    private UUserMapper uUserMapper;
-    @Autowired
-    private BActivityMapper bActivityMapper;
+public class HomePageServiceImpl extends BatisMapper implements HomePageService {
     private Logger logger = Logger.getLogger(HomePageServiceImpl.class);
     @Override
     public String getAllActivityLimit(String jsonData, String type) {
-        logger.info("==>首页列表查询/搜索开始");
+        logger.info("==>首页列表查询/搜索开始,入参:"+jsonData+",类型:"+type);
         try{
             if (StringUtils.isBlank(jsonData)){
                 return JSONObject.fromObject(new Response("1","","入参为空,请检查","")).toString();
@@ -74,7 +69,7 @@ public class HomePageServiceImpl implements HomePageService {
     @Override
     @Transactional
     public String getDetail(String jsonData) {
-        logger.info("==>获取活动详细信息开始");
+        logger.info("==>获取活动详细信息开始,入参;"+jsonData);
         try{
             if (StringUtils.isBlank(jsonData)){
                 return JSONObject.fromObject(new Response("1","","入参为空,请检查","")).toString();
@@ -99,6 +94,7 @@ public class HomePageServiceImpl implements HomePageService {
             bActivity.setBrowsecount(browseCount);
             bActivity.setUpdatetime(new Date());
             bActivityMapper.updateByPrimaryKeySelective(bActivity);
+            logger.info("获取活动详细信息结束");
             return JSONObject.fromObject(new Response("0","","",bActivityPage)).toString();
         }catch (Exception e){
             e.printStackTrace();
@@ -107,4 +103,68 @@ public class HomePageServiceImpl implements HomePageService {
         }
     }
 
+    @Override
+    @Transactional
+    public String joinActivity(String jsonData) {
+        logger.info("==>参加活动开始,入参:"+jsonData);
+        if (jsonData == null){
+            return JSONObject.fromObject(new Response("1","","请检查入参","")).toString();
+        }
+        String openId = String.valueOf(JSONObject.fromObject(jsonData).get("openId"));
+        String activityId = String.valueOf(JSONObject.fromObject(jsonData).get("activityId"));
+        try{
+            UUser uUser = uUserMapper.selectByPrimaryKey(openId);//若openid为""或者null,返回的uUser为null
+            BActivity activity = bActivityMapper.selectByPrimaryKey(activityId);
+            //不能参加自己的活动
+            if (openId.equals(activity.getOpenid())){
+                return JSONObject.fromObject(new Response("1","","不需要参加自己创建的活动","")).toString();
+            }
+            //校验用户是否已经参加该活动
+            BJoinExample joinExample = new BJoinExample();
+            BJoinExample.Criteria criteria = joinExample.createCriteria();
+            criteria.andOpenidEqualTo(openId);
+            criteria.andActivityidEqualTo(activityId);
+            List<BJoin> bJoinList = bJoinMapper.selectByExample(joinExample);
+            if (bJoinList.size()>=1){
+                return JSONObject.fromObject(new Response("1","","您已参加此活动,请不要重复参加","")).toString();
+            }
+
+            //1.更新b_join表
+            if (uUser == null || activity == null){
+                return JSONObject.fromObject(new Response("1","","用户不存在或活动不存在,请核对入参","")).toString();
+            }
+            BJoin join = new BJoin();
+            join.setOpenid(openId);
+            join.setActivityid(activityId);
+            join.setActivityname(activity.getActivityname());
+            join.setNickname(uUser.getNickname());
+            join.setUnionid(uUser.getUnionid());
+            join.setStarttime(activity.getStarttime());
+            join.setEndtime(activity.getEndtime());
+            join.setCreatetime(new Date());
+            bJoinMapper.insertSelective(join);
+
+            //2.更新任务表,给参加者和创建活动者各增加一条待处理任务
+            BTask taskJoin = new BTask();
+            taskJoin.setOpenid(openId);
+            taskJoin.setActivityid(activityId);
+            taskJoin.setTasktype("2");//1:修改用户信息，2:参加某个活动，3:某某参加我的活动
+            taskJoin.setCreatetime(ConstantShow.sdf.format(new Date()));
+            bTaskMapper.insertSelective(taskJoin);
+            BTask taskCreate = new BTask();
+            taskCreate.setOpenid(activity.getOpenid());//活动创建者id
+            taskCreate.setActivityid(activityId);
+            taskCreate.setJoinopenid(openId);//活动参加者id
+            taskCreate.setTasktype("3");
+            taskCreate.setCreatetime(ConstantShow.sdf.format(new Date()));
+            bTaskMapper.insertSelective(taskCreate);
+
+            logger.info("==>参加活动结束");
+            return JSONObject.fromObject(new Response("0","","","")).toString();
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("参加活动失败",e);
+            return JSONObject.fromObject(new Response("1","",e.getMessage(),"")).toString();
+        }
+    }
 }

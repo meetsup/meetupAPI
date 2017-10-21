@@ -13,10 +13,13 @@ import top.shellteo.entity.Response;
 import top.shellteo.entity.UUserPage;
 import top.shellteo.mapper.BActivityMapper;
 import top.shellteo.mapper.BJoinMapper;
+import top.shellteo.mapper.BTaskMapper;
 import top.shellteo.mapper.UUserMapper;
 import top.shellteo.pojo.*;
 import top.shellteo.service.MyService;
+import top.shellteo.util.BatisMapper;
 import top.shellteo.util.BeanConvert;
+import top.shellteo.util.ConstantShow;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,17 +30,12 @@ import java.util.List;
  * Created by HP on 2017/10/17.
  */
 @Service("MyService")
-public class MyServiceImpl implements MyService {
+public class MyServiceImpl extends BatisMapper implements MyService {
     private static Logger logger = Logger.getLogger(MyServiceImpl.class);
-    @Autowired
-    private UUserMapper uUserMapper;
-    @Autowired
-    private BJoinMapper bJoinMapper;
-    @Autowired
-    private BActivityMapper bActivityMapper;
+
     @Override
     public String myActivities(String jsonData) {
-        logger.info("==>我的活动查询开始");
+        logger.info("==>我的活动查询开始,入参:"+jsonData);
         if (StringUtils.isBlank(jsonData)){
             return JSONObject.fromObject(new Response("1","","入参为空,请检查","")).toString();
         }
@@ -70,7 +68,7 @@ public class MyServiceImpl implements MyService {
 
     @Override
     public String myMessage(String jsonData) {
-        logger.info("==>我的信息查询开始");
+        logger.info("==>我的信息查询开始,入参:"+jsonData);
         if (StringUtils.isBlank(jsonData)){
             return JSONObject.fromObject(new Response("1","","入参为空,请检查","")).toString();
         }
@@ -94,7 +92,7 @@ public class MyServiceImpl implements MyService {
     @Override
     @Transactional
     public String changeMesage(String jsonData) {
-        logger.info("==>修改用户信息开始");
+        logger.info("==>修改用户信息开始,入参:"+jsonData);
         if (StringUtils.isBlank(jsonData)){
             return JSONObject.fromObject(new Response("1","","入参为空,请检查","")).toString();
         }
@@ -118,7 +116,7 @@ public class MyServiceImpl implements MyService {
 
     @Override
     public String scanHistory(String jsonData) {
-        logger.info("==>浏览历史查询开始");
+        logger.info("==>浏览历史查询开始,入参:"+jsonData);
         if (StringUtils.isBlank(jsonData)){
             return JSONObject.fromObject(new Response("1","","入参为空,请检查","")).toString();
         }
@@ -159,5 +157,37 @@ public class MyServiceImpl implements MyService {
             logger.error("==>浏览历史查询错误,详细信息:"+e);
             return JSONObject.fromObject(new Response("1","",e.getMessage(),"")).toString();
         }
+    }
+
+    @Override
+    @Transactional
+    public String updateUserInfo(UUserPage uUserPage) {
+        logger.info("==>开始修改用户信息,入参:"+JSONObject.fromObject(uUserPage).toString());
+        if (StringUtils.isBlank(uUserPage.getOpenid())){
+            return JSONObject.fromObject(new Response("1","","openId为空,请检查参数","")).toString();
+        }
+        if (uUserMapper.selectByPrimaryKey(uUserPage.getOpenid()) == null){
+            return JSONObject.fromObject(new Response("1","","用户数据不存在,请登录","")).toString();
+        }
+        UUser uUser = new UUser();
+        try{
+            uUser = (UUser) BeanConvert.objConvertobj(uUserPage,uUser);
+            uUser.setUpdatetime(new Date());
+            int count = uUserMapper.updateByPrimaryKeySelective(uUser);
+            //修改用户数据成功之后给用户生成一条待处理任务
+            if (count > 0){
+                BTask task = new BTask();
+                task.setOpenid(uUserPage.getOpenid());
+                task.setTasktype("1");//1:修改用户信息，2:参加某个活动，3:某某参加我的活动
+                task.setCreatetime(ConstantShow.sdf.format(new Date()));
+                bTaskMapper.insertSelective(task);
+                logger.info("==>修改用户信息结束");
+            }
+        }catch (Exception e){
+            logger.error("修改用户信息失败",e);
+            e.printStackTrace();
+            return JSONObject.fromObject(new Response("1","",e.getMessage(),"")).toString();
+        }
+        return JSONObject.fromObject(new Response("0","","","")).toString();
     }
 }

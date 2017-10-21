@@ -4,20 +4,14 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.util.Base64;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.shellteo.entity.Response;
-import top.shellteo.mapper.UUserMapper;
 import top.shellteo.pojo.UUser;
 import top.shellteo.service.LoginService;
-import top.shellteo.util.AESUtil;
-import top.shellteo.util.ConstantShow;
-import top.shellteo.util.HttpUtils;
-import top.shellteo.util.UUIDUtil;
+import top.shellteo.util.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 
@@ -25,10 +19,8 @@ import java.util.Date;
  * Created by HP on 2017/10/12.
  */
 @Service("LoginService")
-public class LoginServiceImpl implements LoginService {
+public class LoginServiceImpl extends BatisMapper implements LoginService {
     private static Logger logger = Logger.getLogger(LoginServiceImpl.class);
-    @Autowired
-    private UUserMapper uUserMapper;
     @Override
     @Transactional
     public String login(String js_code, HttpServletRequest request) {
@@ -77,6 +69,7 @@ public class LoginServiceImpl implements LoginService {
             JSONObject object = new JSONObject();
             object.accumulate("openId",openId);
             //JSONObject object = JSONObject.fromObject(jsonData);
+            logger.info("==>登录结束");
             return JSONObject.fromObject(new Response("0","","",object)).toString();
         }catch (Exception e){
             e.printStackTrace();
@@ -89,7 +82,7 @@ public class LoginServiceImpl implements LoginService {
     @Transactional
     public String saveUser(String savaJson, HttpServletRequest request) {//String signature, String rawData, String encryptedData, String iv
         //不验证是否已经登陆,前端登录之后若成功直接调用
-        logger.info("==>开始保存用户私密信息");
+        logger.info("==>开始保存用户私密信息,入参:"+savaJson);
         //1.获取json数据
         JSONObject object = JSONObject.fromObject(savaJson);
         String signature = String.valueOf(object.get("signature"));
@@ -138,6 +131,7 @@ public class LoginServiceImpl implements LoginService {
                     uUserMapper.insertSelective(uUser);
                 }
             }
+            logger.info("保存用户信息结束");
         }catch (Exception e){
             e.printStackTrace();
             logger.error("==>保存用户私密信息失败:"+e);

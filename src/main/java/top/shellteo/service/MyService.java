@@ -1,5 +1,7 @@
 package top.shellteo.service;
 
+import top.shellteo.entity.UUserPage;
+
 /**
  * Created by HP on 2017/10/17.
  */
@@ -31,4 +33,11 @@ public interface MyService {
      * @return
      */
     String scanHistory(String jsonData);
+
+    /**
+     * 修改用户信息
+     * @param uUserPage
+     * @return
+     */
+    String updateUserInfo(UUserPage uUserPage);
 }

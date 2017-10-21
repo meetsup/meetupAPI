@@ -16,6 +16,9 @@
             </list>
         </property>
     </bean>
+
+    <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
+
     <!-- 閰嶇疆component鎵�鍦ㄧ殑鍖咃紝鑷姩鍔犺浇闇�瑕佺鐞嗙殑Bean -->
     <context:component-scan base-package="top.shellteo"></context:component-scan>
     <import resource="classpath*:spring/spring-mybatis.xml" />

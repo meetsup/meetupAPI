@@ -9,6 +9,7 @@ import top.shellteo.entity.Response;
 import top.shellteo.mapper.UCityMapper;
 import top.shellteo.pojo.UCity;
 import top.shellteo.service.CityService;
+import top.shellteo.util.BatisMapper;
 
 import java.util.List;
 
@@ -16,10 +17,8 @@ import java.util.List;
  * Created by HP on 2017/10/9.
  */
 @Service("CityService")
-public class CityServiceImpl implements CityService {
+public class CityServiceImpl extends BatisMapper implements CityService {
     private static final Logger logger = Logger.getLogger(CityServiceImpl.class);
-    @Autowired
-    private UCityMapper uCityMapper;
 
     public String findAllCity() {
         JSONArray res = null;

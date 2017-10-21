@@ -41,4 +41,11 @@ public class HomePageController {
         return res;
     }
 
+    @RequestMapping(value = "/join")
+    @ResponseBody
+    public String join(@RequestBody String jsondata){
+        String res = homePageService.joinActivity(jsondata);
+        return res;
+    }
+
 }

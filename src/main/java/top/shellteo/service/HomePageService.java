@@ -17,4 +17,6 @@ public interface HomePageService {
      * @return
      */
     String getDetail(String jsonData);
+
+    String joinActivity(String jsonData);
 }

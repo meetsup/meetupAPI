@@ -11,6 +11,7 @@ import top.shellteo.mapper.UUserMapper;
 import top.shellteo.pojo.UType;
 import top.shellteo.pojo.UUser;
 import top.shellteo.service.TypeService;
+import top.shellteo.util.BatisMapper;
 
 import java.util.List;
 
@@ -18,12 +19,9 @@ import java.util.List;
  * Created by HP on 2017/10/16.
  */
 @Service("TypeService")
-public class TypeServiceImpl implements TypeService {
-    @Autowired
-    private UUserMapper uUserMapper;
-    @Autowired
-    private UTypeMapper uTypeMapper;
+public class TypeServiceImpl extends BatisMapper implements TypeService {
     private Logger logger = Logger.getLogger(TypeServiceImpl.class);
+
     @Override
     public String AllType(String openId) {
         logger.info("==>类型查询开始");

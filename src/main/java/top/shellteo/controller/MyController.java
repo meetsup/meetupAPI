@@ -1,11 +1,13 @@
 package top.shellteo.controller;
 
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.shellteo.entity.UUserPage;
 import top.shellteo.service.MyService;
 
 /**
@@ -42,6 +44,13 @@ public class MyController {
     @RequestMapping(value = "/history")
     public String scanMessage(@RequestBody String jsondata){
         String res = myService.scanHistory(jsondata);
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/updateUserInfo")
+    public String scanMessage(@RequestBody UUserPage userPage){
+        String res = myService.updateUserInfo(userPage);
         return res;
     }
 }

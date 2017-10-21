@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.shellteo.mapper.BTaskMapper" >
+  <resultMap id="BaseResultMap" type="top.shellteo.pojo.BTask" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="OpenId" property="openid" jdbcType="VARCHAR" />
+    <result column="ActivityId" property="activityid" jdbcType="VARCHAR" />
+    <result column="TaskType" property="tasktype" jdbcType="VARCHAR" />
+    <result column="JoinOpenId" property="joinopenid" jdbcType="VARCHAR" />
+    <result column="IsRead" property="isread" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="VARCHAR" />
+    <result column="CreateTime" property="createtime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    Id, OpenId, ActivityId, TaskType, JoinOpenId, IsRead, IsDelete, CreateTime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="top.shellteo.pojo.BTaskExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_task
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_task
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from b_task
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="top.shellteo.pojo.BTaskExample" >
+    delete from b_task
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="top.shellteo.pojo.BTask" >
+    insert into b_task (Id, OpenId, ActivityId, 
+      TaskType, JoinOpenId, IsRead, 
+      IsDelete, CreateTime)
+    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{activityid,jdbcType=VARCHAR}, 
+      #{tasktype,jdbcType=VARCHAR}, #{joinopenid,jdbcType=VARCHAR}, #{isread,jdbcType=VARCHAR}, 
+      #{isdelete,jdbcType=VARCHAR}, #{createtime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="top.shellteo.pojo.BTask" >
+    insert into b_task
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="openid != null" >
+        OpenId,
+      </if>
+      <if test="activityid != null" >
+        ActivityId,
+      </if>
+      <if test="tasktype != null" >
+        TaskType,
+      </if>
+      <if test="joinopenid != null" >
+        JoinOpenId,
+      </if>
+      <if test="isread != null" >
+        IsRead,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="createtime != null" >
+        CreateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="activityid != null" >
+        #{activityid,jdbcType=VARCHAR},
+      </if>
+      <if test="tasktype != null" >
+        #{tasktype,jdbcType=VARCHAR},
+      </if>
+      <if test="joinopenid != null" >
+        #{joinopenid,jdbcType=VARCHAR},
+      </if>
+      <if test="isread != null" >
+        #{isread,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="top.shellteo.pojo.BTaskExample" resultType="java.lang.Integer" >
+    select count(*) from b_task
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update b_task
+    <set >
+      <if test="record.id != null" >
+        Id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.openid != null" >
+        OpenId = #{record.openid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityid != null" >
+        ActivityId = #{record.activityid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tasktype != null" >
+        TaskType = #{record.tasktype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.joinopenid != null" >
+        JoinOpenId = #{record.joinopenid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isread != null" >
+        IsRead = #{record.isread,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isdelete != null" >
+        IsDelete = #{record.isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        CreateTime = #{record.createtime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update b_task
+    set Id = #{record.id,jdbcType=INTEGER},
+      OpenId = #{record.openid,jdbcType=VARCHAR},
+      ActivityId = #{record.activityid,jdbcType=VARCHAR},
+      TaskType = #{record.tasktype,jdbcType=VARCHAR},
+      JoinOpenId = #{record.joinopenid,jdbcType=VARCHAR},
+      IsRead = #{record.isread,jdbcType=VARCHAR},
+      IsDelete = #{record.isdelete,jdbcType=VARCHAR},
+      CreateTime = #{record.createtime,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="top.shellteo.pojo.BTask" >
+    update b_task
+    <set >
+      <if test="openid != null" >
+        OpenId = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="activityid != null" >
+        ActivityId = #{activityid,jdbcType=VARCHAR},
+      </if>
+      <if test="tasktype != null" >
+        TaskType = #{tasktype,jdbcType=VARCHAR},
+      </if>
+      <if test="joinopenid != null" >
+        JoinOpenId = #{joinopenid,jdbcType=VARCHAR},
+      </if>
+      <if test="isread != null" >
+        IsRead = #{isread,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="top.shellteo.pojo.BTask" >
+    update b_task
+    set OpenId = #{openid,jdbcType=VARCHAR},
+      ActivityId = #{activityid,jdbcType=VARCHAR},
+      TaskType = #{tasktype,jdbcType=VARCHAR},
+      JoinOpenId = #{joinopenid,jdbcType=VARCHAR},
+      IsRead = #{isread,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=VARCHAR},
+      CreateTime = #{createtime,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
