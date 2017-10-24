@@ -13,7 +13,9 @@ import top.shellteo.service.HomePageService;
 import top.shellteo.util.BatisMapper;
 import top.shellteo.util.BeanConvert;
 import top.shellteo.util.ConstantShow;
+import top.shellteo.util.UUIDUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +25,7 @@ import java.util.List;
 @Service("HomePageService")
 public class HomePageServiceImpl extends BatisMapper implements HomePageService {
     private Logger logger = Logger.getLogger(HomePageServiceImpl.class);
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override
     public String getAllActivityLimit(String jsonData, String type) {
         logger.info("==>首页列表查询/搜索开始,入参:"+jsonData+",类型:"+type);
@@ -119,6 +122,10 @@ public class HomePageServiceImpl extends BatisMapper implements HomePageService 
             if (openId.equals(activity.getOpenid())){
                 return JSONObject.fromObject(new Response("1","","不需要参加自己创建的活动","")).toString();
             }
+            Date endDate = sdf.parse(activity.getEndtime());
+            if (endDate.getTime()<=(new Date()).getTime()){
+                return JSONObject.fromObject(new Response("1","","活动已结束","")).toString();
+            }
             //校验用户是否已经参加该活动
             BJoinExample joinExample = new BJoinExample();
             BJoinExample.Criteria criteria = joinExample.createCriteria();
@@ -158,6 +165,26 @@ public class HomePageServiceImpl extends BatisMapper implements HomePageService 
             taskCreate.setTasktype("3");
             taskCreate.setCreatetime(ConstantShow.sdf.format(new Date()));
             bTaskMapper.insertSelective(taskCreate);
+
+            //3.给参加者产生定时任务,用于定时发送邮件提醒参加者参加活动
+            BScheduleJob bScheduleJob = new BScheduleJob();
+            String jobId = UUIDUtil.getUUID();
+            String jobGroup = "joinActivity";
+            String cronExpression = activity.getStarttime();//存放活动开始时间
+            bScheduleJob.setJobid(jobId);
+            bScheduleJob.setJobgroup(jobGroup);
+            bScheduleJob.setType("1");
+            bScheduleJob.setOpenid(openId);
+            bScheduleJob.setJobstatus("");
+            bScheduleJob.setTaskstatus("1");//新建
+            bScheduleJob.setActivityid(activityId);
+            bScheduleJob.setCronexpression(cronExpression);
+            bScheduleJob.setDetail("");
+            bScheduleJob.setEmail(uUser.getEmail());
+            bScheduleJob.setTelephone(uUser.getTelphone());
+            bScheduleJob.setCreatetime(new Date());
+            bScheduleJobMapper.insertSelective(bScheduleJob);
+            quartzManagerService.loadSchedule(bScheduleJob);//加载定时任务
 
             logger.info("==>参加活动结束");
             return JSONObject.fromObject(new Response("0","","","")).toString();

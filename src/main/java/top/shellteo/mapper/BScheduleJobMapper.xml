@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.shellteo.mapper.BScheduleJobMapper" >
+  <resultMap id="BaseResultMap" type="top.shellteo.pojo.BScheduleJob" >
+    <id column="JobID" property="jobid" jdbcType="VARCHAR" />
+    <result column="JobGroup" property="jobgroup" jdbcType="VARCHAR" />
+    <result column="Type" property="type" jdbcType="VARCHAR" />
+    <result column="CronExpression" property="cronexpression" jdbcType="VARCHAR" />
+    <result column="OpenId" property="openid" jdbcType="VARCHAR" />
+    <result column="ActivityId" property="activityid" jdbcType="VARCHAR" />
+    <result column="JobStatus" property="jobstatus" jdbcType="VARCHAR" />
+    <result column="TaskStatus" property="taskstatus" jdbcType="VARCHAR" />
+    <result column="Detail" property="detail" jdbcType="VARCHAR" />
+    <result column="Email" property="email" jdbcType="VARCHAR" />
+    <result column="Telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    JobID, JobGroup, Type, CronExpression, OpenId, ActivityId, JobStatus, TaskStatus, 
+    Detail, Email, Telephone, CreateTime, UpdateTime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="top.shellteo.pojo.BScheduleJobExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from b_schedule_job
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from b_schedule_job
+    where JobID = #{jobid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from b_schedule_job
+    where JobID = #{jobid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="top.shellteo.pojo.BScheduleJobExample" >
+    delete from b_schedule_job
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="top.shellteo.pojo.BScheduleJob" >
+    insert into b_schedule_job (JobID, JobGroup, Type, 
+      CronExpression, OpenId, ActivityId, 
+      JobStatus, TaskStatus, Detail, 
+      Email, Telephone, CreateTime, 
+      UpdateTime)
+    values (#{jobid,jdbcType=VARCHAR}, #{jobgroup,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{cronexpression,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{activityid,jdbcType=VARCHAR}, 
+      #{jobstatus,jdbcType=VARCHAR}, #{taskstatus,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="top.shellteo.pojo.BScheduleJob" >
+    insert into b_schedule_job
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="jobid != null" >
+        JobID,
+      </if>
+      <if test="jobgroup != null" >
+        JobGroup,
+      </if>
+      <if test="type != null" >
+        Type,
+      </if>
+      <if test="cronexpression != null" >
+        CronExpression,
+      </if>
+      <if test="openid != null" >
+        OpenId,
+      </if>
+      <if test="activityid != null" >
+        ActivityId,
+      </if>
+      <if test="jobstatus != null" >
+        JobStatus,
+      </if>
+      <if test="taskstatus != null" >
+        TaskStatus,
+      </if>
+      <if test="detail != null" >
+        Detail,
+      </if>
+      <if test="email != null" >
+        Email,
+      </if>
+      <if test="telephone != null" >
+        Telephone,
+      </if>
+      <if test="createtime != null" >
+        CreateTime,
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="jobid != null" >
+        #{jobid,jdbcType=VARCHAR},
+      </if>
+      <if test="jobgroup != null" >
+        #{jobgroup,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="cronexpression != null" >
+        #{cronexpression,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="activityid != null" >
+        #{activityid,jdbcType=VARCHAR},
+      </if>
+      <if test="jobstatus != null" >
+        #{jobstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="taskstatus != null" >
+        #{taskstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null" >
+        #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="top.shellteo.pojo.BScheduleJobExample" resultType="java.lang.Integer" >
+    select count(*) from b_schedule_job
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update b_schedule_job
+    <set >
+      <if test="record.jobid != null" >
+        JobID = #{record.jobid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jobgroup != null" >
+        JobGroup = #{record.jobgroup,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        Type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cronexpression != null" >
+        CronExpression = #{record.cronexpression,jdbcType=VARCHAR},
+      </if>
+      <if test="record.openid != null" >
+        OpenId = #{record.openid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.activityid != null" >
+        ActivityId = #{record.activityid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jobstatus != null" >
+        JobStatus = #{record.jobstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taskstatus != null" >
+        TaskStatus = #{record.taskstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.detail != null" >
+        Detail = #{record.detail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        Email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.telephone != null" >
+        Telephone = #{record.telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        CreateTime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatetime != null" >
+        UpdateTime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update b_schedule_job
+    set JobID = #{record.jobid,jdbcType=VARCHAR},
+      JobGroup = #{record.jobgroup,jdbcType=VARCHAR},
+      Type = #{record.type,jdbcType=VARCHAR},
+      CronExpression = #{record.cronexpression,jdbcType=VARCHAR},
+      OpenId = #{record.openid,jdbcType=VARCHAR},
+      ActivityId = #{record.activityid,jdbcType=VARCHAR},
+      JobStatus = #{record.jobstatus,jdbcType=VARCHAR},
+      TaskStatus = #{record.taskstatus,jdbcType=VARCHAR},
+      Detail = #{record.detail,jdbcType=VARCHAR},
+      Email = #{record.email,jdbcType=VARCHAR},
+      Telephone = #{record.telephone,jdbcType=VARCHAR},
+      CreateTime = #{record.createtime,jdbcType=TIMESTAMP},
+      UpdateTime = #{record.updatetime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="top.shellteo.pojo.BScheduleJob" >
+    update b_schedule_job
+    <set >
+      <if test="jobgroup != null" >
+        JobGroup = #{jobgroup,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        Type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="cronexpression != null" >
+        CronExpression = #{cronexpression,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null" >
+        OpenId = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="activityid != null" >
+        ActivityId = #{activityid,jdbcType=VARCHAR},
+      </if>
+      <if test="jobstatus != null" >
+        JobStatus = #{jobstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="taskstatus != null" >
+        TaskStatus = #{taskstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null" >
+        Detail = #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        Email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        Telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where JobID = #{jobid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="top.shellteo.pojo.BScheduleJob" >
+    update b_schedule_job
+    set JobGroup = #{jobgroup,jdbcType=VARCHAR},
+      Type = #{type,jdbcType=VARCHAR},
+      CronExpression = #{cronexpression,jdbcType=VARCHAR},
+      OpenId = #{openid,jdbcType=VARCHAR},
+      ActivityId = #{activityid,jdbcType=VARCHAR},
+      JobStatus = #{jobstatus,jdbcType=VARCHAR},
+      TaskStatus = #{taskstatus,jdbcType=VARCHAR},
+      Detail = #{detail,jdbcType=VARCHAR},
+      Email = #{email,jdbcType=VARCHAR},
+      Telephone = #{telephone,jdbcType=VARCHAR},
+      CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP}
+    where JobID = #{jobid,jdbcType=VARCHAR}
+  </update>
+</mapper>

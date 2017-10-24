@@ -15,13 +15,37 @@
                 <value>classpath:config/jdbc.properties</value>
             </list>
         </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
     </bean>
 
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
+    <bean class="top.shellteo.schedule.QuartzInit"/>
 
     <!-- 閰嶇疆component鎵�鍦ㄧ殑鍖咃紝鑷姩鍔犺浇闇�瑕佺鐞嗙殑Bean -->
     <context:component-scan base-package="top.shellteo"></context:component-scan>
     <import resource="classpath*:spring/spring-mybatis.xml" />
     <import resource="classpath*:spring/rest-servlet.xml"/>
+    <!--<import resource="classpath*:spring/spring-email.xml"/>-->
+
+    <context:property-placeholder location="classpath:mail.properties" ignore-unresolvable="true"/>
+
+    <!-- 邮件发送器 -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.host}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+                <prop key="mail.smtp.timeout">${mail.smtp.timeout}</prop>
+                <prop key="mail.smtp.port">${mail.smtp.port}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="simpleMailMessage" class="org.springframework.mail.SimpleMailMessage">
+        <!-- 发件人email -->
+        <property name="from" value="${mail.username}"/>
+    </bean>
 
 </beans>
