@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import top.shellteo.entity.BActivityPage;
 import top.shellteo.service.HomePageService;
 
 /**
@@ -45,6 +46,13 @@ public class HomePageController {
     @ResponseBody
     public String join(@RequestBody String jsondata){
         String res = homePageService.joinActivity(jsondata);
+        return res;
+    }
+
+    @RequestMapping(value = "/create")
+    @ResponseBody
+    public String createActivity(BActivityPage activity){
+        String res = homePageService.createActivity(activity);
         return res;
     }
 

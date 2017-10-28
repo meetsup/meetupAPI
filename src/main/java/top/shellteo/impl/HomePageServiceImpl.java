@@ -194,4 +194,33 @@ public class HomePageServiceImpl extends BatisMapper implements HomePageService 
             return JSONObject.fromObject(new Response("1","",e.getMessage(),"")).toString();
         }
     }
+
+    @Override
+    @Transactional
+    public String createActivity(BActivityPage activity) {
+        logger.info("==>开始创建活动,入参:"+JSONObject.fromObject(activity));
+        String openId = activity.getOpenid();
+        if (StringUtils.isBlank(openId)){
+            return JSONObject.fromObject(new Response("1","","openId不能为空","")).toString();
+        }
+        if (uUserMapper.selectByPrimaryKey(openId) == null){
+            return JSONObject.fromObject(new Response("1","","用户数据为空,请登录","")).toString();
+        }
+        if (StringUtils.isBlank(activity.getStarttime()) || StringUtils.isBlank(activity.getEndtime())){
+            return JSONObject.fromObject(new Response("1","","活动开始时间和结束时间不能为空,请检查","")).toString();
+        }
+
+        BActivity bActivity = new BActivity();
+        try{
+            bActivity = (BActivity) BeanConvert.objConvertobj(activity,bActivity);
+            bActivity.setCreatetime(new Date());
+            bActivity.setActivityid(String.valueOf(new Date().getTime()));
+            bActivityMapper.insertSelective(bActivity);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error("==>创建活动失败",e);
+        }
+        logger.info("==>创建活动结束");
+        return JSONObject.fromObject(new Response("0","","","")).toString();
+    }
 }
