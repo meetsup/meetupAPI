@@ -101,9 +101,9 @@ public class LoginServiceImpl extends BatisMapper implements LoginService {
         try{
             /*String openidAndSessionkey = (String) request.getSession().getAttribute(uuid);
             String sessionKey = openidAndSessionkey.split("-")[0];*/
-            String te = rawData+session_key;
-            String signature2 = AESUtil.getSha1(rawData+session_key);
-            if (signature != signature2){
+            String te = rawData.substring(1,rawData.length()-1)+session_key;
+            String signature2 = AESUtil.getSha1(te);
+            if (!signature.equals(signature2)){
                 logger.error("==>保存用户私密信息失败:签名密钥验证失败");
                 return JSONObject.fromObject(new Response("1","","签名密钥验证失败","")).toString();
             }
@@ -120,6 +120,9 @@ public class LoginServiceImpl extends BatisMapper implements LoginService {
                 JSONObject encryptedObject = JSONObject.fromObject(encryptedDataDecode);
                 encryptedObject.remove("watermark");//此数据不存储
                 uUser = (UUser) JSONObject.toBean(encryptedObject,UUser.class);
+                uUser.setOpenid(encryptedObject.get("openId").toString());
+                uUser.setNickname(encryptedObject.get("nickName").toString());
+                uUser.setAvatarurl(encryptedObject.get("avatarUrl").toString());
                 UUser uUser1 = uUserMapper.selectByPrimaryKey(uUser.getOpenid());
                 if (uUser1 != null){
                     //更新
