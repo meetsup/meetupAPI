@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 /**
  * Created by HP on 2017/10/21.
  */
+@SuppressWarnings("SpringJavaAutowiringInspection")
 public abstract class BatisMapper {
     @Autowired
     public UCityMapper uCityMapper;

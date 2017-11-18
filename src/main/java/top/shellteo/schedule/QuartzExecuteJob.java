@@ -1,19 +1,21 @@
-package top.shellteo.schedule.service;
+package top.shellteo.schedule;
 
-import org.apache.log4j.Logger;
+import com.aliyun.oss.common.utils.LogUtils;
 import org.quartz.Job;
+import org.apache.commons.logging.Log;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.stereotype.Component;
 import top.shellteo.pojo.BScheduleJob;
+import top.shellteo.schedule.service.QuartzManagerService;
 import top.shellteo.util.SpringUtils;
 
 
 @Component
 public class QuartzExecuteJob implements Job {
-	
-	protected final Logger logger = Logger.getLogger(this.getClass());
-	
+
+	protected final static Log logger = LogUtils.getLog();
+
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
         try{

@@ -1,15 +1,17 @@
 package top.shellteo.schedule.service.impl;
 
+import com.aliyun.oss.common.utils.LogUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
 import org.apache.log4j.Logger;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 import top.shellteo.pojo.BScheduleJob;
-import top.shellteo.schedule.service.QuartzExecuteJob;
 import top.shellteo.schedule.service.QuartzManagerService;
 import top.shellteo.util.BatisMapper;
+import top.shellteo.schedule.QuartzExecuteJob;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,7 +24,7 @@ public class QuartzManagerServiceImpl extends BatisMapper implements QuartzManag
 	@Autowired
 	private SchedulerFactoryBean schedulerFactoryBean;
 	
-	protected final Logger logger = Logger.getLogger(this.getClass());
+	protected final static Log logger = LogUtils.getLog();
 	
 	@Override
 	/**

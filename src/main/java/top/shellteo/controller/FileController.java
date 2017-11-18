@@ -1,11 +1,10 @@
 package top.shellteo.controller;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.HttpRequestHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.shellteo.service.FileService;
 
@@ -22,9 +21,9 @@ public class FileController {
 
     @ResponseBody
     @RequestMapping(value = "/upload")
-    public String uploadImg(MultipartFile file, HttpServletRequest request){
+    public String uploadImg(@RequestParam MultipartFile file){
         String test = file.getName();
-        String url = fileService.uploadImg(file,request);
+        String url = fileService.uploadImg(file);
         return url;
     }
 }

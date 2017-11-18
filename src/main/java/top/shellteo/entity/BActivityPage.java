@@ -37,6 +37,16 @@ public class BActivityPage implements Serializable {
 
     private String detail;
 
+    private String haveJoin;//用于存储用户是否已经参加该活动 0表示未参加 1表示已参加
+
+    public String getHaveJoin() {
+        return haveJoin;
+    }
+
+    public void setHaveJoin(String haveJoin) {
+        this.haveJoin = haveJoin;
+    }
+
     public String getActivityid() {
         return activityid;
     }

@@ -1,8 +1,10 @@
 package top.shellteo.impl;
 
+import com.aliyun.oss.common.utils.LogUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,13 +33,16 @@ import java.util.List;
  */
 @Service("MyService")
 public class MyServiceImpl extends BatisMapper implements MyService {
-    private static Logger logger = Logger.getLogger(MyServiceImpl.class);
+    private final static Log logger = LogUtils.getLog();
 
     @Override
     public String myActivities(String jsonData) {
         logger.info("==>我的活动查询开始,入参:"+jsonData);
         if (StringUtils.isBlank(jsonData)){
             return JSONObject.fromObject(new Response("1","","入参为空,请检查","")).toString();
+        }
+        if (JSONObject.fromObject(jsonData).get("openId") == null){
+            return JSONObject.fromObject(new Response("1","","openId为空,请检查","")).toString();
         }
         String openId = JSONObject.fromObject(jsonData).get("openId").toString();
         if (uUserMapper.selectByPrimaryKey(openId) == null){

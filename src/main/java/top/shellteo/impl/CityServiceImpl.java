@@ -1,7 +1,9 @@
 package top.shellteo.impl;
 
+import com.aliyun.oss.common.utils.LogUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.logging.Log;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import java.util.List;
  */
 @Service("CityService")
 public class CityServiceImpl extends BatisMapper implements CityService {
-    private static final Logger logger = Logger.getLogger(CityServiceImpl.class);
+    private final static Log logger = LogUtils.getLog();
 
     public String findAllCity() {
         JSONArray res = null;

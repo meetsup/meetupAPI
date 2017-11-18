@@ -1,6 +1,7 @@
 package top.shellteo.schedule.service.impl;
 
-import org.apache.log4j.Logger;
+import com.aliyun.oss.common.utils.LogUtils;
+import org.apache.commons.logging.Log;
 import org.springframework.stereotype.Component;
 import top.shellteo.pojo.BScheduleJob;
 import top.shellteo.util.BatisMapper;
@@ -12,7 +13,7 @@ import java.util.Date;
  */
 @Component("emailSend")
 public class EmailSendServiceImpl extends BatisMapper{
-    private Logger logger = Logger.getLogger(this.getClass());
+    private final static Log logger = LogUtils.getLog();
 
     /**
      *

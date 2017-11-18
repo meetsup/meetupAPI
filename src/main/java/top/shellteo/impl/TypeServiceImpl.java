@@ -1,7 +1,9 @@
 package top.shellteo.impl;
 
+import com.aliyun.oss.common.utils.LogUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.logging.Log;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ import java.util.List;
  */
 @Service("TypeService")
 public class TypeServiceImpl extends BatisMapper implements TypeService {
-    private Logger logger = Logger.getLogger(TypeServiceImpl.class);
+    private final static Log logger = LogUtils.getLog();
 
     @Override
     public String AllType(String openId) {

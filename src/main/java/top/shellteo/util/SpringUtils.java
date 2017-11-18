@@ -1,6 +1,6 @@
 package top.shellteo.util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aliyun.oss.common.utils.LogUtils;
+import org.apache.commons.logging.Log;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -13,7 +13,7 @@ public class SpringUtils implements ApplicationContextAware {
 	@Autowired
 	private static ApplicationContext applicationContext;
 	
-	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+	protected final static Log logger = LogUtils.getLog();
   
 	@Override  
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {

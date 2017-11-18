@@ -1,8 +1,11 @@
 package top.shellteo.impl;
 
+import com.aliyun.oss.common.utils.LogUtils;
+import com.mysql.jdbc.log.LogFactory;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +27,8 @@ import java.util.List;
  */
 @Service("HomePageService")
 public class HomePageServiceImpl extends BatisMapper implements HomePageService {
-    private Logger logger = Logger.getLogger(HomePageServiceImpl.class);
+//    private final static Logger logger = Logger.getLogger(HomePageService.class);
+    private final static Log logger = LogUtils.getLog();
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override
     public String getAllActivityLimit(String jsonData, String type) {
@@ -97,6 +101,18 @@ public class HomePageServiceImpl extends BatisMapper implements HomePageService 
             bActivity.setBrowsecount(browseCount);
             bActivity.setUpdatetime(new Date());
             bActivityMapper.updateByPrimaryKeySelective(bActivity);
+            //4.查询用户是否已经参加该活动
+            BJoinExample joinExample = new BJoinExample();
+            BJoinExample.Criteria criteria = joinExample.createCriteria();
+            criteria.andOpenidEqualTo(openId);
+            criteria.andActivityidEqualTo(activityId);
+            List<BJoin> joinList = bJoinMapper.selectByExample(joinExample);
+            if (joinList == null || joinList.size()==0){
+                bActivityPage.setHaveJoin("0");//用户未参加活动
+            } else {
+                bActivityPage.setHaveJoin("1");//用户已参加活动
+            }
+
             logger.info("获取活动详细信息结束");
             return JSONObject.fromObject(new Response("0","","",bActivityPage)).toString();
         }catch (Exception e){

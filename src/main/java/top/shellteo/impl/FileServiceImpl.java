@@ -16,7 +16,7 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private OSSClientUtil ossClientUtil;
     @Override
-    public String uploadImg(MultipartFile file, HttpServletRequest request) {
+    public String uploadImg(MultipartFile file) {
         String fileUrl = "";
         if (file != null && file.getSize()>0){  //如果文件存在
             String fileName = ossClientUtil.uploadImg2Oss(file);    //返回文件名称

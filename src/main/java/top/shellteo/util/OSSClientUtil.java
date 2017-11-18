@@ -1,10 +1,11 @@
 package top.shellteo.util;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.common.utils.LogUtils;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import top.shellteo.exception.BusinessException;
@@ -19,12 +20,12 @@ import java.util.Random;
  */
 @Component("oSSClientUtil")
 public class OSSClientUtil {
-    Logger log = Logger.getLogger(this.getClass());
+    private final static Log log = LogUtils.getLog();
     // endpoint以杭州为例，其它region请按实际情况填写
     private String endpoint = "oss-cn-hangzhou.aliyuncs.com";
     // accessKey
-    private String accessKeyId = "您的accessKeyId";
-    private String accessKeySecret = "您的accessKeySecret";
+    private String accessKeyId = "LTAIZolpNW0wfr3c";
+    private String accessKeySecret = "QiG8RBDaCEXDvyo0LcCfZAWn6DbVnO";
     //空间
     private String bucketName = "meetsup";
     //文件存储目录

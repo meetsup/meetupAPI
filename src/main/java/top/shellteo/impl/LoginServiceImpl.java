@@ -1,7 +1,9 @@
 package top.shellteo.impl;
 
+import com.aliyun.oss.common.utils.LogUtils;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
 import org.apache.commons.net.util.Base64;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ import java.util.Date;
  */
 @Service("LoginService")
 public class LoginServiceImpl extends BatisMapper implements LoginService {
-    private static Logger logger = Logger.getLogger(LoginServiceImpl.class);
+    private final static Log logger = LogUtils.getLog();
     @Override
     @Transactional
     public String login(String js_code, HttpServletRequest request) {

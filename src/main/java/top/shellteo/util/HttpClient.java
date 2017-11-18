@@ -1,5 +1,7 @@
 package top.shellteo.util;
 
+import com.aliyun.oss.common.utils.LogUtils;
+import org.apache.commons.logging.Log;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -8,7 +10,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
 
 /**
  * @Author:lias
@@ -16,7 +17,7 @@ import org.apache.log4j.Logger;
  * @Date: created in 15:20 2017/6/28
  */
 public class HttpClient {
-    private static Logger logger = Logger.getLogger(HttpClient.class);
+    private final static Log logger = LogUtils.getLog();
 
     public static String executeByPOST(String url, String json) throws Exception {
         logger.info("开始通讯:"+url+" jsondata:"+json+" type:post");

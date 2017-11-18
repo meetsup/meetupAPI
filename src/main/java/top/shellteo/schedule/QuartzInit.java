@@ -14,6 +14,7 @@ import java.util.List;
  * Created by HP on 2017/10/23.
  * spring在将所有的bean初始化后会执行重写方法
  */
+@SuppressWarnings("SpringJavaAutowiringInspection")
 public class QuartzInit implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     private BScheduleJobMapper bScheduleJobMapper;
