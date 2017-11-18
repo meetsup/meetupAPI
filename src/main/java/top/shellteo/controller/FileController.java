@@ -21,8 +21,7 @@ public class FileController {
 
     @ResponseBody
     @RequestMapping(value = "/upload")
-    public String uploadImg(@RequestParam MultipartFile file){
-        String test = file.getName();
+    public Object uploadImg(@RequestParam(value = "file") MultipartFile file){
         String url = fileService.uploadImg(file);
         return url;
     }

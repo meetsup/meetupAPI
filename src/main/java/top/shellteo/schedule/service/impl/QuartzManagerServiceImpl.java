@@ -51,7 +51,7 @@ public class QuartzManagerServiceImpl extends BatisMapper implements QuartzManag
 				int day = calendar.get(Calendar.DAY_OF_YEAR)-calNow.get(Calendar.DAY_OF_YEAR);
 				Date date = DateBuilder.futureDate(day, DateBuilder.IntervalUnit.DAY);//设置几天后执行
 				//按照新的cronExpression表达式构建一个新的Tigger
-				//Date date1 = DateBuilder.futureDate(5, DateBuilder.IntervalUnit.SECOND);//30s后执行
+//				Date date = DateBuilder.futureDate(5, DateBuilder.IntervalUnit.SECOND);//30s后执行
 				Trigger trigger = TriggerBuilder.newTrigger().withIdentity(jobId, jobGroup).startAt(date).build();
 				scheduler.scheduleJob(jobDetail, trigger);
 				logger.info("===>定时任务载入成功");

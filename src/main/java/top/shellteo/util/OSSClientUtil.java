@@ -64,13 +64,14 @@ public class OSSClientUtil {
             String[] split = url.split("/");
             this.uploadFile2OSS(in, split[split.length - 1]);
         } catch (FileNotFoundException e) {
-            throw new BusinessException("图片上传失败");
+            e.printStackTrace();
+            log.error("图片上传失败",e);
         }
     }
 
     public String uploadImg2Oss(MultipartFile file) {
-        if (file.getSize() > 1024 * 1024*20) {
-            throw new BusinessException("上传图片大小不能超过20M！");
+        if (file.getSize() > 1024 * 1024 * 10) {
+            log.error("上传文件大小不能超过10M");
         }
         String originalFilename = file.getOriginalFilename();
         String substring = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
@@ -79,9 +80,11 @@ public class OSSClientUtil {
         try {
             InputStream inputStream = file.getInputStream();
             this.uploadFile2OSS(inputStream, name);
-            return name;
+            return filedir+name;
         } catch (Exception e) {
-            throw new BusinessException("图片上传失败");
+            e.printStackTrace();
+            log.error("文件上传失败",e);
+            throw new BusinessException(e);
         }
     }
 
@@ -107,6 +110,12 @@ public class OSSClientUtil {
      * @return 出错返回"" ,唯一MD5数字签名
      */
     public String uploadFile2OSS(InputStream instream, String fileName) {
+        //这里可以对文件格式进行控制
+        String text = fileName.substring(fileName.lastIndexOf(".")+1);
+        if (!text.equalsIgnoreCase("jpg") && !text.equalsIgnoreCase("jpeg") && !text.equalsIgnoreCase("png")
+                && !text.equalsIgnoreCase("gif") && !text.equalsIgnoreCase("bmp")){
+            throw new BusinessException("上传的格式不符合要求,目前只准许上传的格式包括:jpg/jpeg/png/gif/bmp");
+        }
         String ret = "";
         try {
             //创建上传Object的Metadata
@@ -114,19 +123,21 @@ public class OSSClientUtil {
             objectMetadata.setContentLength(instream.available());
             objectMetadata.setCacheControl("no-cache");
             objectMetadata.setHeader("Pragma", "no-cache");
-            objectMetadata.setContentType(getcontentType(fileName.substring(fileName.lastIndexOf("."))));
+            objectMetadata.setContentType(getcontentType(fileName.substring(fileName.lastIndexOf(".")+1)));
             objectMetadata.setContentDisposition("inline;filename=" + fileName);
             //上传文件
             PutObjectResult putResult = ossClient.putObject(bucketName, filedir + fileName, instream, objectMetadata);
             ret = putResult.getETag();
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            e.printStackTrace();
+            log.error("文件上传oss服务器失败", e);
         } finally {
             try {
                 if (instream != null) {
                     instream.close();
                 }
             } catch (IOException e) {
+                log.error("文件上传oss服务器流关闭失败", e);
                 e.printStackTrace();
             }
         }
@@ -182,12 +193,14 @@ public class OSSClientUtil {
      */
     public String getUrl(String key) {
         // 设置URL过期时间为10年  3600l* 1000*24*365*10
-        Date expiration = new Date(new Date().getTime() + 3600l * 1000 * 24 * 365 * 10);
+        Date expiration = new Date(new Date().getTime() + 3600l * 1000 * 24 * 365 * 10);//单位ms ,设置10年后过期
         // 生成URL
         URL url = ossClient.generatePresignedUrl(bucketName, key, expiration);
         if (url != null) {
             return url.toString();
+        } else {
+            log.error("文件上传生成地址失败");
+            throw new BusinessException("生成地址失败");
         }
-        return null;
     }
 }
